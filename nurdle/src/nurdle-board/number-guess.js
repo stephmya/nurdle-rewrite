@@ -1,20 +1,25 @@
 import React, { useRef, useState, useEffect } from "react";
 import { Box, Typography } from "@mui/material";
 
-const NumberGuess = () => {
+const NumberGuess = ({ onGuessesTaken }) => {
   const [chipRows, setChipRows] = useState([Array(3).fill("")]);
   const [result, setResult] = useState("");
   const [randomNumber, setRandomNumber] = useState("");
   const [rowColors, setRowColors] = useState([Array(3).fill(null)]);
   const inputRefs = useRef([Array(3).fill(null)]);
 
+  //reset game state
+  const resetGame = () => {
+    setChipRows([Array(3).fill("")]);
+    setRowColors([Array(3).fill(null)]);
+    setResult("");
+    const newRandomNumber = String(Math.floor(100 + Math.random() * 900));
+    console.log("New Generated Number:", newRandomNumber);
+    setRandomNumber(newRandomNumber);
+  };
+
   useEffect(() => {
-    const generateRandomNumber = () => {
-      return String(Math.floor(100 + Math.random() * 900));
-    };
-    const generatedNumber = generateRandomNumber();
-    console.log("Generated Number:", generatedNumber);
-    setRandomNumber(generatedNumber);
+    resetGame();
   }, []);
 
   const handleChipChange = (rowIndex, chipIndex, value) => {
@@ -32,7 +37,7 @@ const NumberGuess = () => {
   const handleKeyDown = (event, rowIndex) => {
     if (event.key === "Enter") {
       const currentRow = chipRows[rowIndex];
-      
+
       if (currentRow.some((val) => val === "")) {
         setResult("Fill all 3 digits first.");
         return;
@@ -41,20 +46,22 @@ const NumberGuess = () => {
       const enteredNumber = currentRow.join("");
       const colors = Array(3).fill(null);
       const randomNumberArray = randomNumber.split("");
-      const currentRowCopy = [...currentRow];
+      const randomNumberCheck = [...randomNumberArray];
 
-      randomNumberArray.forEach((digit, index) => {
-        if (currentRowCopy[index] === digit) {
+      currentRow.forEach((digit, index) => {
+        if (digit === randomNumberArray[index]) {
           colors[index] = "green";
-          randomNumberArray[index] = null;
-          currentRowCopy[index] = null;
+          randomNumberCheck[index] = null;
         }
       });
 
-      currentRowCopy.forEach((digit, index) => {
-        if (digit && randomNumberArray.includes(digit)) {
+      currentRow.forEach((digit, index) => {
+        if (
+          digit !== randomNumberArray[index] &&
+          randomNumberCheck.includes(digit)
+        ) {
           colors[index] = "orange";
-          randomNumberArray[randomNumberArray.indexOf(digit)] = null;
+          randomNumberCheck[randomNumberCheck.indexOf(digit)] = null;
         }
       });
 
@@ -64,17 +71,20 @@ const NumberGuess = () => {
 
       if (enteredNumber === randomNumber) {
         setResult("Correct! You guessed the number!");
+        onGuessesTaken(rowIndex + 1);
+        resetGame();
       } else {
-        if (chipRows.length < 4) {
+        if (chipRows.length < 6) {
           setChipRows([...chipRows, Array(3).fill("")]);
           inputRefs.current.push(Array(3).fill(null));
-          setRowColors([...rowColors, Array(3).fill(null)]);
+          setRowColors([...newRowColors, Array(3).fill(null)]);
 
           setTimeout(() => {
             inputRefs.current[chipRows.length][0]?.focus();
           }, 0);
         } else {
           setResult(`The correct number was ${randomNumber}.`);
+          resetGame();
         }
       }
     } else if (

@@ -4,11 +4,8 @@ import NumberGuess from "./nurdle-board/number-guess";
 
 function App() {
   return (
-    <div
-      style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}
-    >
+    <div>
       <BoardMain />
-      <NumberGuess />
     </div>
   );
 }
