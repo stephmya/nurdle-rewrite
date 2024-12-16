@@ -103,90 +103,99 @@ const BoardMain = () => {
   };
 
   return (
-    <Box sx={{ position: "relative", width: 500, height: 500, margin: "auto" }}>
-      {winner && (
+    <Box
+      sx={{
+        display: "grid",
+        gridTemplateColumns: "1fr 1fr",
+        gap: "10px",
+        alignItems: "center",
+      }}
+    >
+      <Box
+        sx={{ position: "relative", width: 500, height: 500, margin: "auto" }}
+      >
+        {winner && (
+          <Box
+            sx={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              backgroundColor: "rgba(0, 0, 0, 0.7)",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              zIndex: 10,
+            }}
+          >
+            <Typography
+              variant="h3"
+              sx={{
+                color: "white",
+                fontWeight: "bold",
+                textAlign: "center",
+              }}
+            >
+              {winner} Wins!
+            </Typography>
+          </Box>
+        )}
+        <img
+          src={chutesImage}
+          alt="Chutes and Ladders Board"
+          style={{ width: "100%", height: "100%" }}
+        />
+
+        {/*//Player 1 Icon */}
         <Box
           sx={{
             position: "absolute",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            backgroundColor: "rgba(0, 0, 0, 0.7)",
+            width: 30,
+            height: 30,
+            borderRadius: "50%",
+            backgroundColor: "blue",
+            color: "white",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            zIndex: 10,
+            fontSize: "1.5rem",
+            transform: "translate(-50%, -50%)",
+            ...getPlayerPosition(playerPosition),
           }}
         >
-          <Typography
-            variant="h3"
-            sx={{
-              color: "white",
-              fontWeight: "bold",
-              textAlign: "center",
-            }}
-          >
-            {winner} Wins!
+          ☻
+        </Box>
+
+        {/*//RNG Player Icon */}
+        <Box
+          sx={{
+            position: "absolute",
+            width: 30,
+            height: 30,
+            borderRadius: "50%",
+            backgroundColor: "red",
+            color: "white",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            fontSize: "1.5rem",
+            transform: "translate(-50%, -50%)",
+            ...getPlayerPosition(rngPlayerPosition),
+          }}
+        >
+          ☻
+        </Box>
+
+        <Box textAlign={"center"}>
+          <Typography variant="h6">
+            Player 1 Position: {playerPosition}
+          </Typography>
+          <Typography variant="h6">
+            RNG Player Position: {rngPlayerPosition}
           </Typography>
         </Box>
-      )}
-      <img
-        src={chutesImage}
-        alt="Chutes and Ladders Board"
-        style={{ width: "100%", height: "100%" }}
-      />
 
-      {/* //Player 1 Icon */}
-      <Box
-        sx={{
-          position: "absolute",
-          width: 30,
-          height: 30,
-          borderRadius: "50%",
-          backgroundColor: "blue",
-          color: "white",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          fontSize: "1.5rem",
-          transform: "translate(-50%, -50%)",
-          ...getPlayerPosition(playerPosition),
-        }}
-      >
-        ☻
-      </Box>
-
-      {/* //RNG Player Icon */}
-      <Box
-        sx={{
-          position: "absolute",
-          width: 30,
-          height: 30,
-          borderRadius: "50%",
-          backgroundColor: "red",
-          color: "white",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          fontSize: "1.5rem",
-          transform: "translate(-50%, -50%)",
-          ...getPlayerPosition(rngPlayerPosition),
-        }}
-      >
-        ☻
-      </Box>
-
-      {/* // Game UI */}
-      <Box sx={{ textAlign: "center", marginTop: 2 }}>
-        <Typography variant="h6">
-          Player 1 Position: {playerPosition}
-        </Typography>
-        <Typography variant="h6">
-          RNG Player Position: {rngPlayerPosition}
-        </Typography>
-
-        {!winner && <NumberGuess onGuessesTaken={handleGuessesTaken} />}
         <Button
           variant="contained"
           sx={{ marginTop: 2 }}
@@ -203,6 +212,11 @@ const BoardMain = () => {
         >
           Reset Whole Game
         </Button>
+      </Box>
+
+      {/*//Game UI Section */}
+      <Box sx={{ textAlign: "center" }}>
+        {!winner && <NumberGuess onGuessesTaken={handleGuessesTaken} />}
       </Box>
     </Box>
   );
